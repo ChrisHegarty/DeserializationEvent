@@ -33,11 +33,12 @@ public class Utils {
 
     /** Returns a serialized byte stream representation of the given obj. */
     public static <T> byte[] serialize(T obj) throws IOException {
-        var baos = new ByteArrayOutputStream();
-        var oos = new ObjectOutputStream(baos);
-        oos.writeObject(obj);
-        oos.close();
-        return baos.toByteArray();
+        try(var baos = new ByteArrayOutputStream();
+            var oos = new ObjectOutputStream(baos)) {
+            oos.writeObject(obj);
+            oos.flush();
+            return baos.toByteArray();
+        }
     }
 
     /** Returns a live object from a given serialized byte stream. */
